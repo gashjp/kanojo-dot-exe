@@ -5,6 +5,9 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	_ "github.com/gashjp/kanojo-dot-exe/statik"
+	"github.com/rakyll/statik/fs"
 )
 
 // a
@@ -42,6 +45,11 @@ func apiHandler(w http.ResponseWriter, r *http.Request) {
 
 func webHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("web handler %s", r.URL.Path)
-	fileServer := http.StripPrefix("/web/", http.FileServer(http.Dir("web")))
+	fs, err := fs.New()
+	if err != nil {
+		fmt.Printf(err.Error() + " a\n")
+		return
+	}
+	fileServer := http.StripPrefix("/web/", http.FileServer(fs))
 	fileServer.ServeHTTP(w, r)
 }
