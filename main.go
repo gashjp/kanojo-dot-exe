@@ -1,10 +1,11 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
-	"os"
+	"strconv"
 
 	_ "github.com/gashjp/kanojo-dot-exe/statik"
 	"github.com/rakyll/statik/fs"
@@ -16,16 +17,25 @@ const (
 	PATHWEB = "/web/"
 )
 
+var (
+	p = flag.Int("port", 8080, "available: 8080,49152～65535")
+)
+
 func main() {
+
+	flag.Parse()
+	// port
+	port := ""
+	if *p <= 65535 && *p >= 49152 {
+		port = strconv.Itoa(*p)
+	} else {
+		port = "8080"
+	}
+
 	mux := http.NewServeMux()
 	mux.Handle(PATHAPI, http.HandlerFunc(apiHandler))
 	mux.Handle(PATHWEB, http.HandlerFunc(webHandler))
 	mux.Handle("/", http.HandlerFunc(indexHandler))
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-		log.Printf("Defaulting to port %s", port)
-	}
 
 	log.Printf("Listening on port %s", port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), mux))
