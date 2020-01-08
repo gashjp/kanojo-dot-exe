@@ -12,6 +12,7 @@ function GoGopher(id, move, t) {
         'left': (move + pos.left) + 'px'
     }, {
             'duration': t,
+            'easing': 'swing',
             'delay': 100,
             'complete': function () {
 
@@ -27,12 +28,13 @@ function GoGopher(id, move, t) {
 
 function JumpGopher(id, flag) {
     pos = $(id).offset();
+    console.log('top: ' + pos.top + ' ,left: ' + pos.left)
     abs = flag ? 1 : -1;
     move = 70;
     t = 1000;
     $(id).animate({
-        'left': (abs * move / 2 + pos.left) + 'px',
-        'top': (pos.top - 100) + 'px',
+        'left': (abs * move * 0.7 + pos.left) + 'px',
+        'top': (pos.top - 200) + 'px',
     }, {
             'duration': t / 2,
             'delay': 0,
@@ -41,7 +43,6 @@ function JumpGopher(id, flag) {
             'top': (pos.top - 56) + 'px',
         }, {
                 'duration': t / 2,
-                'delay': 50,
                 'complete': function () {
 
                     if (pos.left > $(window).width()) {
