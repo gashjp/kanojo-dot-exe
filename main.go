@@ -50,6 +50,11 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func apiHandler(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path == "/api/gopher/msg" {
+		w.Header().Set("Content-type", "application/json")
+		fmt.Fprintf(w, `{"result":200,"msg":"hello gopher ^-^"}`)
+		return
+	}
 	fmt.Fprint(w, "api handler")
 }
 

@@ -27,18 +27,18 @@ function JumpGopher(id, flag) {
 
     function jump(id, pos, x, abs) {
         y = getHeight(x)
+        p = $(id).offset();
         if (y < 0) {
-            y = 0;
+            y = 1;
         }
+
         $(id).animate({
             'left': (abs * x + pos.left) + 'px',
-            'top': (pos.top - y) + 'px',
+            'top': (pos.top - y - 56) + 'px',
         }, {
                 'duration': 1000 / 35,
                 'delay': 0,
                 'complete': function () {
-                    p = $(id).offset();
-                    console.log('p ' + p.top)
                     if (x > 66) {
                         endJump(id, pos, abs)
                         return
@@ -71,13 +71,28 @@ function JumpGopher(id, flag) {
 
     pos = $(id).offset();
     abs = flag ? 1 : -1;
-    console.log('jump at ', pos.top)
     jump(id, pos, 0, abs);
 }
 
 function talkGopher(id) {
     $(".gopher").css('animation-play-state', 'paused')
-    $(".hukidasi-text").text("hello jquery");
+    msg = ""
+    $(".hukidasi-text").text(msg);
+    $.ajax({
+        type: 'GET',
+        url: '/api/gopher/msg',
+        dataType: 'json',
+        timespan: 5000,
+        success: function (data) {
+            $(".hukidasi-text").text(data.msg);
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            console.log("ajax通信に失敗しました");
+            console.log("XMLHttpRequest : " + XMLHttpRequest.status);
+            console.log("textStatus     : " + textStatus);
+            console.log("errorThrown    : " + errorThrown.message);
+        },
+    });
     $(".hukidasi").toggle();
     setTimeout(function () {
 
